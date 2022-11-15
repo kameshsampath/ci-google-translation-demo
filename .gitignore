@@ -1,0 +1,8 @@
+.vscode
+.env*
+!.envrc
+**/.direnv
+__pycache__
+node_modules
+secrets.txt
+test_data.yaml

@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  envoy:
+    image: envoyproxy/envoy-dev:fcfb1cd1d68f47d0fcacea693d76e1866ca2fde0
+    ports:
+      - "10000:10000"
+      - "9091:9901"
+    volumes:
+      - ./cmd/server/envoy.yaml:/etc/envoy/envoy.yaml
+    links:
+      - "lingua-greeter-server"
+    networks:
+      - linuga-greeter
+  lingua-greeter-server:
+    image: kameshsampath/lingua-greeter-server
+    env_file:
+      - .env
+    ports:
+      - "9090:9090"
+    networks:
+      - linuga-greeter
+  # greeter-client:
+  #   image: kameshsampath/lingua-greeter-client
+  #   ports:
+  #     - "8080:80"
+  #   networks:
+  #     - linuga-greeter
+networks:
+  linuga-greeter:

@@ -1,0 +1,7 @@
+FROM node:buster-slim
+
+RUN apt-get update \
+    && apt install -y curl ca-certificates curl \
+    gnupg protobuf-compiler 
+
+RUN npm -g install protoc-gen-grpc-web

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/kameshsampath/example/pkg/greeter";
+
+package greeter;
+
+// The greeting service definition.
+service Greeter {
+  // Greets the use
+  rpc Greet (TranslationRequest) returns (stream TranslationReply) {}
+}
+
+message TranslationRequest {
+  string message = 1;
+  string source_lang = 2;
+  repeated string target_langs  = 3;
+}
+
+// The response message containing the translated greeting with the language 
+// to which it was translated
+message TranslationReply {
+  string message = 1;
+  string lang = 2;
+}

@@ -1,0 +1,64 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: protoc-server
+  image: kameshsampath/protoc-go
+  pull: if-not-exists
+  commands:
+  - |
+    protoc --go_out=. --go_opt=paths=source_relative \
+    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+    ./protos/greeter.proto
+
+- name: protoc-web
+  image: kameshsampath/protoc-grpc-web
+  pull: if-not-exists
+  commands:
+  - |
+    protoc -I=./protos greeter.proto \
+      --js_out=import_style=commonjs:./client/web \
+      --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./client/web
+  - |
+    echo -n "{
+      "name": "lingua-greeter-client",
+      "dependencies": {
+        "google-protobuf": "^3.21.2",
+        "grpc-web": "^1.4.2"
+      },
+      "devDependencies": {
+        "browserify": "^16.2.2",
+        "webpack": "^4.16.5",
+        "webpack-cli": "^3.1.0"
+      }
+    }" > client/web/package.json
+
+## Build Server binary
+- name: build server
+  image: golang:1.19
+  pull: if-not-exists
+  commands:
+    - rm -rf ./cmd/server/server
+    - go build -o ./cmd/server/server ./cmd/server/main.go
+
+## Build Server image
+- name: build server image
+  image: plugins/docker
+  pull: if-not-exists
+  settings:
+    context: ./cmd/server
+    insecure: true
+    purge: false
+    dry_run: true
+    dockerfile: ./cmd/server/Dockerfile
+    repo: kameshsampath/lingua-greeter-server
+  volumes:
+    - name: docker-sock
+      path: /var/run/docker.sock
+
+
+volumes:
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
