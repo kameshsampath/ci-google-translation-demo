@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lingua-greeter-server
+spec:
+  selector:
+    matchLabels:
+      app: lingua-greeter-server
+  template:
+    metadata:
+      labels:
+        app: lingua-greeter-server
+    spec:
+      containers:
+      - name: lingua-greeter-server
+        image: k3d-myregistry.localhost:5001/lingua-greeter-server
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        envFrom:
+          - secretRef:
+             name: lingua-greeter-config
+        ports:
+        - name: grpc
+          containerPort: 9090
