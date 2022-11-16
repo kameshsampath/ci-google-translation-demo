@@ -6,3 +6,6 @@ __pycache__
 node_modules
 secrets.txt
 test_data.yaml
+cmd/server/server
+cmd/client/main
+cmd/client/client
