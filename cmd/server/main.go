@@ -7,7 +7,7 @@ import (
 	"net"
 
 	"github.com/kameshsampath/ci-google-translation-demo/pkg/greeter"
-	"github.com/kameshsampath/ci-google-translation-demo/pkg/handler"
+	impl "github.com/kameshsampath/ci-google-translation-demo/pkg/server"
 	"google.golang.org/grpc"
 )
 
@@ -22,7 +22,7 @@ func main() {
 		panic(err)
 	}
 	s := grpc.NewServer()
-	greeter.RegisterGreeterServer(s, &handler.LinguaGreeterServer{})
+	greeter.RegisterGreeterServer(s, &impl.LinguaGreeterServer{})
 	log.Printf("Server listening on %s", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		panic(err)

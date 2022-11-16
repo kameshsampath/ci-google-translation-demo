@@ -2,17 +2,21 @@ module github.com/kameshsampath/ci-google-translation-demo
 
 go 1.19
 
-require google.golang.org/api v0.102.0
+require (
+	github.com/stretchr/testify v1.6.1
+	google.golang.org/api v0.102.0
+)
 
 require (
 	cloud.google.com/go v0.105.0 // indirect
+	github.com/davecgh/go-spew v1.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.6.0 // indirect
-	github.com/shurcooL/go v0.0.0-20200502201357-93f07166e636 // indirect
-	github.com/shurcooL/go-goon v1.0.0 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.opencensus.io v0.23.0 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
 
 require (

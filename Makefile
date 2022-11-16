@@ -1,9 +1,9 @@
-GO_PROTOC_IMAGE?=kameshsampath/protoc-go
-WEB_PROTOC_IMAGE?=kameshsampath/protoc-grpc-web
-GO_PROTOC_IMAGE_CACHE?=kameshsampath/protoc-go-cache
-WEB_PROTOC_IMAGE_CACHE?=kameshsampath/protoc-grpc-web-cache
-UI_CACHE?=type=registry,ref=kameshsampath/docker-extension-ui-cache
-UI_BAS_IMAGE=kameshsampath/drone-ci-extension-ui-base
+IMAGE_REPO?=kameshsampath
+GO_RUNNER_IMAGE?=$(IMAGE_REPO)/go-run
+GO_PROTOC_IMAGE?=$(IMAGE_REPO)/protoc-go
+WEB_PROTOC_IMAGE?=$(IMAGE_REPO)/protoc-grpc-web
+GO_PROTOC_IMAGE_CACHE?=$(IMAGE_REPO)/protoc-go-cache
+WEB_PROTOC_IMAGE_CACHE?=$(IMAGE_REPO)/protoc-grpc-web-cache
 TAG?=latest
 
 BUILDER=buildx-multi-arch
@@ -13,6 +13,9 @@ build-go-protoc:	prepare-buildx ## Build protoc with go plugins
 
 build-web-protoc:	prepare-buildx ## Build protoc with grpc-web plugins
 	docker buildx build --builder=$(BUILDER) -f docker/Dockerfile.web.protoc . --push --pull=true --cache-to=$(WEB_PROTOC_IMAGE_CACHE) --cache-from=$(WEB_PROTOC_IMAGE_CACHE) --platform linux/amd64,linux/arm64 -t $(WEB_PROTOC_IMAGE):$(TAG)
+
+build-go-runner:	prepare-buildx ## a simple go runner used for testing
+	docker buildx build --builder=$(BUILDER) -f docker/Dockerfile.go.run . --push --pull=true --platform linux/amd64,linux/arm64 -t $(GO_RUNNER_IMAGE):$(TAG)
 
 prepare-buildx: ## Create buildx builder for multi-arch build, if not exists
 	docker buildx inspect $(BUILDER) || docker buildx create --name=$(BUILDER) --driver=docker-container --driver-opt=network=host

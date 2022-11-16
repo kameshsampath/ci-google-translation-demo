@@ -2,7 +2,22 @@ kind: pipeline
 type: docker
 name: default
 
+services:
+- name: grpc-service
+  image: kameshsampath/go-run
+  pull: always
+  environment:
+    GO_WORKSPACE: /drone/src
+    GO_RUN_FILE: ./cmd/server/main.go
+
 steps:
+- name: test
+  image: golang:1.19
+  commands:
+    # TODO move to earlier step which can check if grpc service is reachable
+    - sleep 30
+    - go test -v ./...
+
 - name: protoc-server
   image: kameshsampath/protoc-go
   pull: if-not-exists
@@ -20,20 +35,7 @@ steps:
     protoc -I=./protos greeter.proto \
       --js_out=import_style=commonjs:./client/web \
       --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./client/web
-  - |
-    echo -n "{
-      "name": "lingua-greeter-client",
-      "dependencies": {
-        "google-protobuf": "^3.21.2",
-        "grpc-web": "^1.4.2"
-      },
-      "devDependencies": {
-        "browserify": "^16.2.2",
-        "webpack": "^4.16.5",
-        "webpack-cli": "^3.1.0"
-      }
-    }" > client/web/package.json
-
+ 
 ## Build Server binary
 - name: build server
   image: golang:1.19

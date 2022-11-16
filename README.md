@@ -9,10 +9,8 @@ A demo on how to use Google API with gRPC application with go based server and g
 - node
 - Google API Key to Access Translation API
 
-## Generate Server and Client Stubs
+### Run App
 
 ```shell
-drone exec --include="protoc-server" --include="protoc-web"
+docker-compose up
 ```
-
-### Add 

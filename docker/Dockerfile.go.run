@@ -1,0 +1,8 @@
+FROM golang:1.19
+
+ENV GO_WORKSPACE=/workspace
+ENV GO_RUN_FILE=main.go
+
+RUN echo -n 'cd $GO_WORKSPACE && go run $GO_RUN_FILE' > /run-go.sh 
+
+ENTRYPOINT ["/bin/bash","/run-go.sh"]
