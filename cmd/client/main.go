@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 
-	"github.com/kameshsampath/example/pkg/greeter"
+	"github.com/kameshsampath/ci-google-translation-demo/pkg/greeter"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
