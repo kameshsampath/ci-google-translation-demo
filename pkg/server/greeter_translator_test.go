@@ -35,13 +35,9 @@ func TestGreet(t *testing.T) {
 		if err == io.EOF || count > 0 {
 			break
 		}
-		if err != nil {
-			log.Fatal(err)
-		}
+		assert.NoError(t, err)
 		m, err := stream.Recv()
-		if err != nil {
-			log.Fatal(err)
-		}
+		assert.NoError(t, err)
 		want := "வணக்கம் உலகம்"
 		got := m.Message
 		assert.Equalf(t, want, got, "Expecting %s but for %s", want, got)

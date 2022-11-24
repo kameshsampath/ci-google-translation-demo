@@ -16,7 +16,6 @@ import (
 )
 
 var (
-	ctx    context.Context
 	once   sync.Once
 	client *translate.Client
 	err    error
@@ -36,7 +35,7 @@ func (*LinguaGreeterServer) Greet(req *greeter.TranslationRequest, stream greete
 			req.TargetLangs[i], req.TargetLangs[j] = req.TargetLangs[j], req.TargetLangs[i]
 		})
 		tl := req.TargetLangs[0]
-		t, err := client.Translate(ctx,
+		t, err := client.Translate(context.Background(),
 			[]string{req.Message},
 			language.MustParse(tl),
 			&translate.Options{
@@ -62,6 +61,8 @@ var _ greeter.GreeterServer = (*LinguaGreeterServer)(nil)
 
 func init() {
 	if apiKey, ok := os.LookupEnv("DEMO_API_KEY"); ok {
+		ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)
+		defer cancel()
 		client, err = translate.NewClient(ctx, option.WithAPIKey(apiKey))
 		if err != nil {
 			panic(err)
